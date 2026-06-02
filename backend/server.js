@@ -11,6 +11,7 @@ app.use('/api/sales-trend', require('./routes/salesTrend'));
 app.use('/api/product-ranking', require('./routes/productRanking'));
 app.use('/api/customer-cte', require('./routes/customerCte'));
 app.use('/api/subquery-join', require('./routes/subqueryJoin'));
+app.use('/api/tables', require('./routes/tables'));
 
 app.use((err, req, res, next) => {
   console.error(err);

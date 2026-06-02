@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,32 +8,97 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 <body>
-  <button class="hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+  <button class="hamburger" id="hamburger" aria-label="메뉴 열기">&#9776;</button>
 
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">Dashboard</div>
     <ul class="nav-list">
-      <li class="nav-item active" data-tab="sales-trend">GROUP BY</li>
+      <li class="nav-item active" data-tab="home">HOME</li>
+      <li class="nav-item" data-tab="sales-trend">GROUP BY</li>
       <li class="nav-item" data-tab="product-ranking">WINDOW</li>
       <li class="nav-item" data-tab="customer-cte">CTE</li>
       <li class="nav-item" data-tab="subquery-join">SUB+JOIN</li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="nav-list">
+      <li class="nav-item" data-tab="database">DATABASE</li>
     </ul>
   </nav>
 
   <div class="overlay" id="overlay"></div>
 
   <main class="content" id="content">
-    <div class="tab-pane" id="tab-panel">
+    <div id="home-panel">
+      <div class="home-hero">
+        <p class="home-label">Portfolio Project</p>
+        <h1 class="home-title">SQL Analytics Dashboard</h1>
+        <p class="home-desc">Northwind 데이터베이스를 활용해 실무에서 자주 쓰이는 SQL 기법 4가지를 인터랙티브 차트로 시각화합니다.</p>
+      </div>
+      <div class="home-tags">
+        <span class="tag">MySQL 8</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Express</span>
+        <span class="tag">Chart.js</span>
+        <span class="tag">Vanilla JS</span>
+      </div>
+      <div class="home-queries">
+        <div class="query-card" data-tab="sales-trend">
+          <span class="query-badge">GROUP BY</span>
+          <p class="query-title">월별 매출 집계</p>
+          <p class="query-desc">SUM + GROUP BY로 시간대별 매출 추이를 집계합니다.</p>
+        </div>
+        <div class="query-card" data-tab="product-ranking">
+          <span class="query-badge">WINDOW</span>
+          <p class="query-title">상품별 판매량 순위</p>
+          <p class="query-desc">RANK() OVER로 서브쿼리 없이 판매 순위를 부여합니다.</p>
+        </div>
+        <div class="query-card" data-tab="customer-cte">
+          <span class="query-badge">CTE</span>
+          <p class="query-title">고객별 총 구매액 분석</p>
+          <p class="query-desc">WITH 절로 복잡한 집계를 단계별로 분리합니다.</p>
+        </div>
+        <div class="query-card" data-tab="subquery-join">
+          <span class="query-badge">SUB+JOIN</span>
+          <p class="query-title">평균 이상 주문 고객 필터링</p>
+          <p class="query-desc">스칼라 서브쿼리를 동적 임계값으로 활용합니다.</p>
+        </div>
+      </div>
+      <p class="home-db-link">원본 데이터가 궁금하다면 → <a href="#" id="db-link">DATABASE 보기</a></p>
+    </div>
+
+    <div id="tab-panel" class="hidden">
       <p class="question" id="question"></p>
       <p class="why" id="why"></p>
+      <p class="loading hidden" id="loading">불러오는 중...</p>
       <pre class="sql-block"><code id="sql-code"></code></pre>
       <div class="chart-wrapper">
         <canvas id="chart"></canvas>
       </div>
       <p class="insight" id="insight"></p>
+      <div class="error-state hidden" id="error-state">
+        데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.
+      </div>
     </div>
-    <div class="error-state hidden" id="error-state">
-      Failed to load data. Please try again later.
+
+    <div id="db-panel" class="hidden">
+      <p class="question">원본 데이터</p>
+      <p class="why">Northwind 데이터베이스의 주요 테이블입니다. 각 쿼리 탭의 분석은 이 데이터를 기반으로 합니다. (최대 50행)</p>
+      <div class="table-nav">
+        <button class="table-btn active" data-table="orders">orders</button>
+        <button class="table-btn" data-table="order_details">order_details</button>
+        <button class="table-btn" data-table="customers">customers</button>
+        <button class="table-btn" data-table="products">products</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="data-table">
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+      <p class="insight" id="table-insight"></p>
+      <div class="error-state hidden" id="db-error-state">
+        데이터를 불러오지 못했습니다.
+      </div>
     </div>
   </main>
 
