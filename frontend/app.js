@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://localhost:3000';
+const BACKEND_URL = 'https://sql-analytics-dashboard-fd0d.onrender.com';
 
 const TABS = {
   'sales-trend': {
