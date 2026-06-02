@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Analytics Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <button class="hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">Dashboard</div>
+    <ul class="nav-list">
+      <li class="nav-item active" data-tab="sales-trend">GROUP BY</li>
+      <li class="nav-item" data-tab="product-ranking">WINDOW</li>
+      <li class="nav-item" data-tab="customer-cte">CTE</li>
+      <li class="nav-item" data-tab="subquery-join">SUB+JOIN</li>
+    </ul>
+  </nav>
+
+  <div class="overlay" id="overlay"></div>
+
+  <main class="content" id="content">
+    <div class="tab-pane" id="tab-panel">
+      <p class="question" id="question"></p>
+      <p class="why" id="why"></p>
+      <pre class="sql-block"><code id="sql-code"></code></pre>
+      <div class="chart-wrapper">
+        <canvas id="chart"></canvas>
+      </div>
+      <p class="insight" id="insight"></p>
+    </div>
+    <div class="error-state hidden" id="error-state">
+      Failed to load data. Please try again later.
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
