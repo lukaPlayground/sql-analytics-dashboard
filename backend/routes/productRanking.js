@@ -9,11 +9,11 @@ SELECT
   RANK() OVER (ORDER BY total_quantity DESC) AS ranking
 FROM (
   SELECT
-    p.ProductName AS product_name,
-    SUM(od.Quantity) AS total_quantity
-  FROM \`order details\` od
-  JOIN products p ON od.ProductID = p.ProductID
-  GROUP BY p.ProductID, p.ProductName
+    p.product_name,
+    SUM(od.quantity) AS total_quantity
+  FROM order_details od
+  JOIN products p ON od.product_id = p.id
+  GROUP BY p.id, p.product_name
 ) AS aggregated
 ORDER BY ranking
 LIMIT 10

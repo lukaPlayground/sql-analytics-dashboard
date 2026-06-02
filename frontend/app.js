@@ -74,15 +74,15 @@ const TABS = {
     },
   },
   'subquery-join': {
-    question: 'Which countries generate above-average order values?',
-    why: 'A subquery in the HAVING clause computes the global average order value once; the outer query groups by country and filters out any country whose average falls below that benchmark. This pattern — scalar subquery as a dynamic threshold — is a common real-world SQL technique.',
+    question: 'Which customers have placed above-average orders?',
+    why: 'A subquery computes the global average order value; the outer query uses IN + JOIN to filter only customers whose orders exceeded that threshold. This nested subquery pattern — using a scalar aggregate as a dynamic filter — is one of the most common real-world SQL techniques.',
     buildChart: (data) => ({
       type: 'bar',
       data: {
-        labels: data.map(r => r.country),
+        labels: data.map(r => r.customer_name),
         datasets: [{
-          label: 'Total Revenue ($)',
-          data: data.map(r => r.total_revenue),
+          label: 'Total Spent ($)',
+          data: data.map(r => r.total_spent),
           backgroundColor: data.map((_, i) => i === 0 ? '#111' : '#ccc'),
         }],
       },
@@ -92,7 +92,7 @@ const TABS = {
         scales: { x: { beginAtZero: true } },
       },
     }),
-    insight: (data) => data.length ? `Top country: ${data[0].country} ($${Number(data[0].total_revenue).toLocaleString()})` : '',
+    insight: (data) => data.length ? `Top customer: ${data[0].customer_name} — $${Number(data[0].total_spent).toLocaleString()} across ${data[0].order_count} order(s)` : '',
   },
 };
 

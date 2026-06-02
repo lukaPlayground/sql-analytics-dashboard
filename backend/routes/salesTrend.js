@@ -4,13 +4,13 @@ const router = express.Router();
 
 const SQL = `
 SELECT
-  YEAR(o.OrderDate)  AS year,
-  MONTH(o.OrderDate) AS month,
-  ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS revenue
+  YEAR(o.order_date)  AS year,
+  MONTH(o.order_date) AS month,
+  ROUND(SUM(od.unit_price * od.quantity * (1 - od.discount)), 2) AS revenue
 FROM orders o
-JOIN \`order details\` od ON o.OrderID = od.OrderID
-WHERE o.OrderDate IS NOT NULL
-GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate)
+JOIN order_details od ON o.id = od.order_id
+WHERE o.order_date IS NOT NULL
+GROUP BY YEAR(o.order_date), MONTH(o.order_date)
 ORDER BY year, month
 `;
 

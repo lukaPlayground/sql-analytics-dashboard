@@ -4,18 +4,30 @@ const router = express.Router();
 
 const SQL = `
 SELECT
-  c.Country AS country,
-  ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS total_revenue,
-  COUNT(DISTINCT o.OrderID) AS order_count
+  c.company AS customer_name,
+  COUNT(DISTINCT o.id) AS order_count,
+  ROUND(SUM(od.unit_price * od.quantity * (1 - od.discount)), 2) AS total_spent
 FROM orders o
-JOIN \`order details\` od ON o.OrderID = od.OrderID
-JOIN customers c ON o.CustomerID = c.CustomerID
-GROUP BY c.Country
-HAVING AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)) > (
-  SELECT AVG(od2.UnitPrice * od2.Quantity * (1 - od2.Discount))
-  FROM \`order details\` od2
+JOIN order_details od ON o.id = od.order_id
+JOIN customers c ON o.customer_id = c.id
+WHERE c.id IN (
+  SELECT DISTINCT o2.customer_id
+  FROM orders o2
+  JOIN order_details od2 ON o2.id = od2.order_id
+  GROUP BY o2.id
+  HAVING SUM(od2.unit_price * od2.quantity * (1 - od2.discount)) > (
+    SELECT AVG(order_total)
+    FROM (
+      SELECT SUM(od3.unit_price * od3.quantity * (1 - od3.discount)) AS order_total
+      FROM orders o3
+      JOIN order_details od3 ON o3.id = od3.order_id
+      GROUP BY o3.id
+    ) AS totals
+  )
 )
-ORDER BY total_revenue DESC
+GROUP BY c.id, c.company
+ORDER BY total_spent DESC
+LIMIT 10
 `;
 
 router.get('/', async (req, res) => {
