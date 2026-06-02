@@ -1,6 +1,11 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
+const required = ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME'];
+for (const key of required) {
+  if (!process.env[key]) throw new Error(`Missing env var: ${key}`);
+}
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT || 4000,
@@ -10,6 +15,10 @@ const pool = mysql.createPool({
   ssl: { rejectUnauthorized: true },
   waitForConnections: true,
   connectionLimit: 10,
+});
+
+pool.on('error', (err) => {
+  console.error('DB pool error:', err.message);
 });
 
 module.exports = pool.promise();
